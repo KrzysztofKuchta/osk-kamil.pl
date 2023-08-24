@@ -18,6 +18,7 @@ router.post('/api/v1/create-message',
 
 router.post('/api/v1/delete-message',
     body('id').notEmpty(),
+    authMiddleware,
     MessageController.deleteMessage)
 
 export {

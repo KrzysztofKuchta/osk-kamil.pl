@@ -11,7 +11,6 @@ router.post('/api/v1/login',
     ,AuthController.login)
 
 router.post('/api/v1/register',
-    body('name').notEmpty(),
     body('email').isEmail(),
     body('password').isLength({min: 6}),
     AuthController.register)
