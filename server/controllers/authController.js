@@ -17,6 +17,8 @@ class AuthController{
         const isValidPassword = User.comparePassword(req.body.password);
 
         if (!isValidPassword) {
+
+            return res.status(403).json({message : "Password not valid", success : false})
             throw new Error('password not valid');
         }
 
@@ -78,12 +80,31 @@ class AuthController{
     }
     async logout(req,res){
         const { refreshToken } = req.cookies
+
         try {
             await refreshTokens.deleteOne({ token: refreshToken });
             res.clearCookie('refreshToken');
             return res.status(201).json({ message: 'Refresh token został usunięty.' });
         } catch (err) {
             return res.status(403).json({ message: err.message });
+        }
+
+    }
+
+    async changePassword(req,res){
+        const {refreshToken} = req.cookies
+        const {newPassword} = req.body
+        const userEmail = jwt.verify(refreshToken, REFRESH_TOKEN).email;
+
+       console.log(userEmail)
+
+        try{ 
+            const User = await User.findOne({email: userEmail})
+            User.password = "123123s"
+            await User.save()
+            return res.status(200).json({success  : true, message : "Password changed"})
+        }catch(e){
+            return  res.status(401).json({success  : false, message : e.message})
         }
 
     }

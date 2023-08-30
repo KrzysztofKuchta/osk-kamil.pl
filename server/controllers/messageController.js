@@ -47,7 +47,6 @@ class MessageController{
 
     async deleteMessage(req,res){
         const {id} = req.body
-
         try {
             await messageModel.deleteOne({_id : id})
             return res.status(200).json({success : true, message : "message deleted successfully"})
