@@ -4,6 +4,7 @@ import {validationResult} from "express-validator";
 class MessageController{
     async createMessage(req,res){
         const maxAgeInMilliseconds =  24 * 60 * 60 * 1000; // one day
+        //console.log(req.cookies.canCreateMessage)
 
 
         const errors = validationResult(req);
@@ -19,7 +20,7 @@ class MessageController{
             telephoneNumber,
             message
         })
-        const canCreateMessage = false
+        const canCreateMessage = true
         try {
             res.cookie('canCreateMessage', canCreateMessage, {
                 maxAge: maxAgeInMilliseconds,
@@ -48,6 +49,9 @@ class MessageController{
     async deleteMessage(req,res){
         const {id} = req.body
         try {
+            if(!await messageModel.findOne({_id: id})){
+                throw new Error("message doesn't exists!")
+            }
             await messageModel.deleteOne({_id : id})
             return res.status(200).json({success : true, message : "message deleted successfully"})
         } catch (e) {
