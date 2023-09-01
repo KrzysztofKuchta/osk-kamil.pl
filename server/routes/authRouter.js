@@ -19,7 +19,7 @@ router.post('/api/v1/refresh-token', AuthController.refreshToken)
 
 router.post('/api/v1/logout', AuthController.logout)
 
-router.post('/api/v1/change-password', AuthController.changePassword)
+router.post('/api/v1/change-password',authMiddleware,  body('newPassword').isEmpty(), AuthController.changePassword)
 
 export {
     router as authRouter
