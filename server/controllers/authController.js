@@ -99,7 +99,7 @@ class AuthController{
        console.log(userEmail)
 
         try{ 
-            const User = await User.findOne({email: userEmail})
+            const User = await user.findOne({email: userEmail})
             User.password = newPassword
             await User.save()
             return res.status(200).json({success  : true, message : "Password changed"})
